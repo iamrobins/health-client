@@ -7,35 +7,44 @@ import {
   Tbody,
   Td,
   useColorModeValue,
+  Select,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { MediatorService } from "services/apis";
-import { User } from "interfaces";
+import { useState } from "react";
+import { HospitalService } from "services/apis";
+import { Shift } from "interfaces";
 import { useQuery } from "react-query";
 
 function ListHospitals() {
-  const [hospitals, setHospitals] = useState<User[]>([]);
-  const mediator = MediatorService.getInstance();
-  useQuery("hospitals", async () => {
+  const [shifts, setShifts] = useState<Shift[]>([]);
+  const shift = HospitalService.getInstance();
+  const [nurseIdForShift, setNurseIdForShift] = useState("");
+
+  useQuery("shifts", async () => {
     try {
-      const data = await mediator.getGroup("hospitals");
+      const data = await shift.getShifts();
       if (!data) return;
-      setHospitals(data);
+      console.log(data);
+      setShifts(data);
     } catch (error) {
       console.log(error);
-      setHospitals([]);
+      setShifts([]);
     }
   });
+
+  const assignShift = async (shiftId: number) => {
+    if (!nurseIdForShift || !shiftId) return;
+    await shift.assignShift(shiftId, nurseIdForShift);
+  };
 
   // useEffect(() => {
   //   const fetchHospitals = async () => {
   //     try {
-  //       const data = await mediator.getGroup("hospitals");
+  //       const data = await shift.getShifts("shifts");
   //       if (!data) return;
-  //       setHospitals(data);
+  //       setShifts(data);
   //     } catch (error) {
   //       console.log(error);
-  //       setHospitals([]);
+  //       setShifts([]);
   //     }
   //   };
 
@@ -48,16 +57,43 @@ function ListHospitals() {
         <Thead>
           <Tr>
             <Th>Name</Th>
-            <Th>Manager</Th>
-            <Th>Email</Th>
+            <Th>Location</Th>
+            <Th>Start Time</Th>
+            <Th>Pay/H</Th>
+            <Th>Duration</Th>
+            <Th>Nurse Assigned</Th>
+            <Th>Select Nurse</Th>
           </Tr>
         </Thead>
         <Tbody fontSize={"14"}>
-          {hospitals.map((hospital) => (
-            <Tr>
-              <Td>{hospital.hospital_name}</Td>
-              <Td>{hospital.first_name + " " + hospital.last_name}</Td>
-              <Td>{hospital.email}</Td>
+          {shifts.map((shift) => (
+            <Tr key={shift.id}>
+              <Td>{shift.name}</Td>
+              <Td>{shift.location}</Td>
+              <Td>{shift.start_time}</Td>
+              <Td>{shift.pay_per_hour}</Td>
+              <Td>{shift.duration_in_hour}</Td>
+              <Td>{shift.nurse ? shift.nurse.username : "None"}</Td>
+              {shift.requested_shifts.length > 0 && !shift.nurse ? (
+                <Td>
+                  <Select
+                    placeholder="Select Nurse"
+                    // defaultValue={shift.requested_shifts[0].username}
+                    onChange={(e) => {
+                      setNurseIdForShift(e.target.value);
+                      assignShift(shift.id);
+                    }}
+                  >
+                    {shift.requested_shifts.map((nurse) => (
+                      <option key={nurse.id} value={nurse.id}>
+                        {nurse.username}
+                      </option>
+                    ))}
+                  </Select>
+                </Td>
+              ) : (
+                <Td>Already Assigned</Td>
+              )}
             </Tr>
           ))}
         </Tbody>
