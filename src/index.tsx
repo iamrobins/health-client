@@ -7,18 +7,23 @@ import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "state";
+import { QueryClientProvider, QueryClient } from "react-query";
 
 const container = document.getElementById("root");
 if (!container) throw new Error("Failed to find the root element");
 const root = ReactDOM.createRoot(container);
 
+const queryClient = new QueryClient();
+
 root.render(
   <React.StrictMode>
     <ColorModeScript />
     <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </QueryClientProvider>
     </Provider>
   </React.StrictMode>
 );
