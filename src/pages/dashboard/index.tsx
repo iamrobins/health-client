@@ -237,7 +237,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                     {authUser.firstName} {authUser.lastName}
                   </Text>
                   <Text fontSize="xs" color="gray.600">
-                    Admin
+                    {authUser.scope}
                   </Text>
                 </VStack>
                 <Box display={{ base: "none", md: "flex" }}>
