@@ -12,12 +12,13 @@ import {
 import { useState } from "react";
 import { HospitalService } from "services/apis";
 import { Shift } from "interfaces";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 function ListHospitals() {
   const [shifts, setShifts] = useState<Shift[]>([]);
   const shift = HospitalService.getInstance();
   const [nurseIdForShift, setNurseIdForShift] = useState("");
+  const queryClient = useQueryClient();
 
   useQuery("shifts", async () => {
     try {
@@ -34,6 +35,7 @@ function ListHospitals() {
   const assignShift = async (shiftId: number) => {
     if (!nurseIdForShift || !shiftId) return;
     await shift.assignShift(shiftId, nurseIdForShift);
+    queryClient.invalidateQueries("shifts");
   };
 
   // useEffect(() => {
@@ -91,7 +93,7 @@ function ListHospitals() {
                   </Select>
                 </Td>
               ) : (
-                <Td>Already Assigned</Td>
+                <Td>{!shift.nurse ? "No Requests Yet" : "Already Assigned"}</Td>
               )}
             </Tr>
           ))}

@@ -31,6 +31,18 @@ class HospitalService {
 
     return data;
   }
+
+  public async addShift(payload: any) {
+    const res = await fetch(`${this.host}/api/hospital/shifts/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      credentials: "include",
+    });
+    const data = await res.json();
+
+    return data;
+  }
 }
 
 export default HospitalService;

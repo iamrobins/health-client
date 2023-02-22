@@ -1,5 +1,6 @@
 import { VStack, Heading } from "@chakra-ui/react";
 import ListShifts from "./ListShifts";
+import AddShifts from "./AddShifts";
 
 function Shifts() {
   return (
@@ -8,6 +9,7 @@ function Shifts() {
         Shifts
       </Heading>
       <ListShifts />
+      <AddShifts />
     </VStack>
   );
 }
