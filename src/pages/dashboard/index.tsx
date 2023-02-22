@@ -33,22 +33,29 @@ import {
   FiBell,
   FiChevronDown,
 } from "react-icons/fi";
+import { FaRegHospital, FaUserNurse, FaBookMedical } from "react-icons/fa";
 import { IconType } from "react-icons";
 import { ReactText } from "react";
 import { ColorModeSwitcher } from "ColorModeSwitcher";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 interface LinkItemProps {
   name: string;
   icon: IconType;
 }
-const LinkItems: Array<LinkItemProps> = [
-  { name: "Home", icon: FiHome },
-  { name: "Trending", icon: FiTrendingUp },
-  { name: "Explore", icon: FiCompass },
-  { name: "Favourites", icon: FiStar },
-  { name: "Settings", icon: FiSettings },
+
+const MediatorItems: Array<LinkItemProps> = [
+  { name: "Hospitals", icon: FaRegHospital },
+  { name: "Nurses", icon: FaUserNurse },
+];
+
+const HospitalItems: Array<LinkItemProps> = [
+  { name: "Shifts", icon: FaBookMedical },
+];
+
+const NurseItems: Array<LinkItemProps> = [
+  { name: "Shifts", icon: FaBookMedical },
 ];
 
 export default function SidebarWithHeader({
@@ -90,6 +97,14 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+  const { user: authUser } = useSelector((x: any) => x.user);
+  const scope = JSON.parse(window.localStorage.getItem("scope")!);
+  let LinkItems: Array<LinkItemProps> = [];
+
+  if (scope === "mediator") LinkItems = MediatorItems;
+  else if (scope === "hospital") LinkItems = HospitalItems;
+  else LinkItems = NurseItems;
+
   return (
     <Box
       transition="3s ease"
@@ -103,14 +118,14 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
+          Health +
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon}>
-          {link.name}
-        </NavItem>
+        <RouterLink key={link.name} to={`/dashboard/${link.name}`}>
+          <NavItem icon={link.icon}>{link.name}</NavItem>
+        </RouterLink>
       ))}
     </Box>
   );
@@ -122,37 +137,31 @@ interface NavItemProps extends FlexProps {
 }
 const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
   return (
-    <Link
-      href="#"
-      style={{ textDecoration: "none" }}
-      _focus={{ boxShadow: "none" }}
+    <Flex
+      align="center"
+      p="4"
+      mx="4"
+      borderRadius="lg"
+      role="group"
+      cursor="pointer"
+      _hover={{
+        bg: "cyan.400",
+        color: "white",
+      }}
+      {...rest}
     >
-      <Flex
-        align="center"
-        p="4"
-        mx="4"
-        borderRadius="lg"
-        role="group"
-        cursor="pointer"
-        _hover={{
-          bg: "cyan.400",
-          color: "white",
-        }}
-        {...rest}
-      >
-        {icon && (
-          <Icon
-            mr="4"
-            fontSize="16"
-            _groupHover={{
-              color: "white",
-            }}
-            as={icon}
-          />
-        )}
-        {children}
-      </Flex>
-    </Link>
+      {icon && (
+        <Icon
+          mr="4"
+          fontSize="16"
+          _groupHover={{
+            color: "white",
+          }}
+          as={icon}
+        />
+      )}
+      {children}
+    </Flex>
   );
 };
 
