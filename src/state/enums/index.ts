@@ -1,0 +1,10 @@
+export enum demoEnum {
+  ONE = "1",
+  TWO = "2",
+}
+
+export enum userEnum {
+  USER_PROFILE_REQUEST = "USER_PROFILE_REQUEST",
+  USER_PROFILE_SUCCESS = "USER_PROFILE_SUCCESS",
+  USER_PROFILE_FAIL = "USER_PROFILE_FAIL",
+}
