@@ -11,6 +11,15 @@ class MediatorService {
     return MediatorService.instance;
   }
 
+  public async getGroup(type: string): Promise<any> {
+    const res = await fetch(`${this.host}/api/mediator/${type}/`, {
+      credentials: "include",
+    });
+    const data = await res.json();
+    if (!data.success) return [];
+    return data.data;
+  }
+
   public async createGroup(type: string, payload: any): Promise<any> {
     const res = await fetch(`${this.host}/api/mediator/register/${type}/`, {
       method: "POST",
