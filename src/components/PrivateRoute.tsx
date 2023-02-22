@@ -13,18 +13,19 @@ function PrivateRoute({ children }: { children: JSX.Element }) {
 
   useEffect(() => {
     const verifyUser = async () => {
-      const token = JSON.parse(window.localStorage.getItem("token")!);
-      if (!token) return window.location.replace("/");
+      const scope = JSON.parse(window.localStorage.getItem("scope")!);
+      if (!scope) return window.location.replace("/");
 
       const auth = AuthService.getInstance();
-      const profile = await auth.profile(token);
+      const profile = await auth.profile(scope);
       if (!profile) return window.location.replace("/");
       dispatch({
         type: userEnum.USER_PROFILE_SUCCESS,
         payload: {
-          firstName: profile.firstName,
-          lastName: profile.lastName,
-          email: profile.email,
+          firstName: profile.user.first_name,
+          lastName: profile.user.last_name,
+          email: profile.user.email,
+          scope: profile.user.scope,
         },
       });
     };

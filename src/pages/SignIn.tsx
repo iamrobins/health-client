@@ -12,6 +12,7 @@ import {
   Text,
   useColorModeValue,
   useToast,
+  Select,
 } from "@chakra-ui/react";
 import Layout from "components/Layout";
 import useVerify from "hooks/useVerify";
@@ -24,11 +25,13 @@ import { userEnum } from "state/enums";
 export default function SimpleCard() {
   const boxBg = useColorModeValue("white", "gray.700");
   const { user: authUser } = useSelector((x: any) => x.user);
+  const [signInType, setSignInType] = useState("mediator");
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const toast = useToast();
   const auth = AuthService.getInstance();
+
   useVerify();
 
   const handleSignIn = async () => {
@@ -40,16 +43,18 @@ export default function SimpleCard() {
         isClosable: true,
       });
 
-    const data = await auth.login({ email, password });
+    const data = await auth.login({ email, password }, signInType);
+
     dispatch({
       type: userEnum.USER_PROFILE_SUCCESS,
       payload: {
-        firstName: data.user.firstName,
-        lastName: data.user.lastName,
+        firstName: data.user.first_name,
+        lastName: data.user.last_name,
         email,
+        scope: data.user.scope,
       },
     });
-    localStorage.setItem("token", JSON.stringify(data.token));
+    localStorage.setItem("scope", JSON.stringify(data.user.scope));
     return <Navigate to="/dashboard" />;
   };
 
@@ -94,7 +99,15 @@ export default function SimpleCard() {
                   align={"start"}
                   justify={"space-between"}
                 >
-                  <Checkbox>Remember me</Checkbox>
+                  <Select
+                    placeholder="SignIn As"
+                    defaultValue={signInType}
+                    onChange={(e) => setSignInType(e.target.value)}
+                  >
+                    <option value="mediator">Mediator</option>
+                    <option value="hospital">Hospital</option>
+                    <option value="nurse">Nurse</option>
+                  </Select>
                 </Stack>
                 <Button
                   bg={"blue.400"}
@@ -106,23 +119,6 @@ export default function SimpleCard() {
                 >
                   Sign in
                 </Button>
-                <Stack>
-                  <Text align={"center"}>
-                    New User?{" "}
-                    <Text color="blue.400" as="span">
-                      <RouterLink to="/signup">Sign Up</RouterLink>
-                    </Text>
-                  </Text>
-                </Stack>
-                <Stack>
-                  <Text align={"center"}>
-                    <Text color="blue.400" as="span">
-                      <RouterLink to="/forgotpassword">
-                        Forgot Password
-                      </RouterLink>
-                    </Text>
-                  </Text>
-                </Stack>
               </Stack>
             </Stack>
           </Box>

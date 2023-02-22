@@ -18,11 +18,9 @@ class AuthService {
     return AuthService.instance;
   }
 
-  public async profile(token: string) {
-    const res = await fetch(this.host + "/api/auth/profile", {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
+  public async profile(type: string) {
+    const res = await fetch(`${this.host}/api/${type}/profile/`, {
+      credentials: "include",
     });
 
     const data = await res.json();
@@ -30,11 +28,12 @@ class AuthService {
     return data;
   }
 
-  public async login(user: any): Promise<AuthResponse> {
-    const res = await fetch(this.host + "/api/auth/login", {
+  public async login(user: any, type: string): Promise<AuthResponse> {
+    const res = await fetch(`${this.host}/api/${type}/login/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(user),
+      credentials: "include",
     });
     const data: AuthResponse = await res.json();
 
