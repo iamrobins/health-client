@@ -78,7 +78,6 @@ function ListHospitals() {
                 <Td>
                   <Select
                     placeholder="Select Nurse"
-                    // defaultValue={shift.requested_shifts[0].username}
                     onChange={(e) => {
                       setNurseIdForShift(e.target.value);
                       assignShift(shift.id);
