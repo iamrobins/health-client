@@ -6,6 +6,7 @@ import {
   Th,
   Tbody,
   Td,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { MediatorService } from "services/apis";
@@ -43,7 +44,7 @@ function ListHospitals() {
 
   return (
     <TableContainer w="100%">
-      <Table variant="simple">
+      <Table variant="simple" bg={useColorModeValue("gray.300", "gray.800")}>
         <Thead>
           <Tr>
             <Th>Name</Th>

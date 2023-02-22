@@ -12,6 +12,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { MediatorService } from "services/apis";
@@ -47,13 +48,13 @@ function AddHospital() {
     setHospitalName("");
     setPassword("");
   };
-
+  const addHospitalBtnColor = useColorModeValue("blue.400", "blue.200");
   return (
     <Popover closeOnBlur={false} placement="left">
       {({ isOpen, onClose }) => (
         <>
           <PopoverTrigger>
-            <Button>Add Hospital</Button>
+            <Button bg={addHospitalBtnColor}>Add Hospital</Button>
           </PopoverTrigger>
           <Portal>
             <PopoverContent>
