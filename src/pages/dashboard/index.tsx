@@ -39,6 +39,7 @@ import { ReactText } from "react";
 import { ColorModeSwitcher } from "ColorModeSwitcher";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { AuthService } from "services/apis";
 
 interface LinkItemProps {
   name: string;
@@ -170,10 +171,10 @@ interface MobileProps extends FlexProps {
 }
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   const { user: authUser } = useSelector((x: any) => x.user);
-  const navigate = useNavigate();
-  const handleSignOut = () => {
-    window.localStorage.removeItem("token");
-    return navigate("/");
+  const handleSignOut = async () => {
+    const auth = AuthService.getInstance();
+    await auth.logout(authUser.scope);
+    return (window.location.href = "/");
   };
 
   return (

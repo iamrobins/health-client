@@ -51,6 +51,17 @@ class AuthService {
     return data;
   }
 
+  public async logout(type: string): Promise<boolean> {
+    try {
+      await fetch(`${this.host}/api/${type}/logout/`, {
+        credentials: "include",
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   public async forgotPassword(email: string) {
     const res = await fetch(this.host + "/api/auth/forgotpassword", {
       method: "POST",

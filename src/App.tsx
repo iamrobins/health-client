@@ -22,10 +22,7 @@ export const App = () => {
               element={
                 <PrivateRoute>
                   <Dashboard>
-                    <Text>Scroll Check For Sidebar</Text>
-                    {[...Array(50)].map((_, i) => (
-                      <div key={i}>Some Content {i + 1}</div>
-                    ))}
+                    <Text>Dashboard Main Area</Text>
                   </Dashboard>
                 </PrivateRoute>
               }
