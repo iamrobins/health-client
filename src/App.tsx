@@ -9,7 +9,8 @@ import PasswordReset from "pages/PasswordReset";
 import Dashboard from "pages/dashboard";
 import Hospitals from "components/mediator/Hospitals";
 import Nurses from "components/mediator/Nurses";
-import Shifts from "components/hospital/Shifts";
+import HospitalShifts from "components/hospital/Shifts";
+import NurseShifts from "components/nurse/Shifts";
 
 export const App = () => {
   return (
@@ -55,7 +56,7 @@ export const App = () => {
               element={
                 <PrivateRoute>
                   <Dashboard>
-                    <Shifts />
+                    <HospitalShifts />
                   </Dashboard>
                 </PrivateRoute>
               }
@@ -66,7 +67,7 @@ export const App = () => {
               element={
                 <PrivateRoute>
                   <Dashboard>
-                    <div>Available Shifts</div>
+                    <NurseShifts />
                   </Dashboard>
                 </PrivateRoute>
               }
