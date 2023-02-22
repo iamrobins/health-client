@@ -10,25 +10,36 @@ import {
 import { useEffect, useState } from "react";
 import { MediatorService } from "services/apis";
 import { User } from "interfaces";
+import { useQuery } from "react-query";
 
 function ListHospitals() {
   const [hospitals, setHospitals] = useState<User[]>([]);
   const mediator = MediatorService.getInstance();
+  useQuery("hospitals", async () => {
+    try {
+      const data = await mediator.getGroup("hospitals");
+      if (!data) return;
+      setHospitals(data);
+    } catch (error) {
+      console.log(error);
+      setHospitals([]);
+    }
+  });
 
-  useEffect(() => {
-    const fetchHospitals = async () => {
-      try {
-        const data = await mediator.getGroup("hospitals");
-        if (!data) return;
-        setHospitals(data);
-      } catch (error) {
-        console.log(error);
-        setHospitals([]);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchHospitals = async () => {
+  //     try {
+  //       const data = await mediator.getGroup("hospitals");
+  //       if (!data) return;
+  //       setHospitals(data);
+  //     } catch (error) {
+  //       console.log(error);
+  //       setHospitals([]);
+  //     }
+  //   };
 
-    fetchHospitals();
-  }, []);
+  //   fetchHospitals();
+  // }, []);
 
   return (
     <TableContainer w="100%">

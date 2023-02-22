@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { MediatorService } from "services/apis";
+import { useQueryClient } from "react-query";
 
 function AddHospital() {
   const [fName, setFName] = useState("");
@@ -24,6 +25,7 @@ function AddHospital() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const mediator = MediatorService.getInstance();
+  const queryClient = useQueryClient();
 
   const addHospital = async () => {
     if (!fName || !lName || !username || !email || !password || !hospitalName)
@@ -37,6 +39,13 @@ function AddHospital() {
       password,
     };
     await mediator.createGroup("hospital", payload);
+    queryClient.invalidateQueries("hospitals");
+    setFName("");
+    setLName("");
+    setUsername("");
+    setEmail("");
+    setHospitalName("");
+    setPassword("");
   };
 
   return (
